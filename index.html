@@ -183,12 +183,12 @@ footer{color:var(--muted);font-size:13px;padding:20px 0 40px}
     <h2>4. Helper file that gets auto-loaded</h2>
     <p>Create this file in the game folder:</p>
     <div class="code filecode" data-context="Auto-loaded file">
-  <div class="codebar"><span>file path · Auto-loaded file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>File path</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>game/console_taboo_unlock.rpy</code></pre>
 </div>
     <p>Paste this into that file:</p>
     <div class="code filecode" data-context="Auto-loaded file">
-  <div class="codebar"><span>console_taboo_unlock.rpy · Auto-loaded file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>console_taboo_unlock.rpy</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code># Ren&#x27;Py console + Taboo Mode helper
 # Place this file in the game/ folder, next to the game&#x27;s .rpa files.
 # Restart the game fully after adding or changing this file.
@@ -267,40 +267,40 @@ renpy.save_persistent()</code></pre>
     <div class="search"><input id="exampleSearch" type="search" placeholder="Search examples: money, watersports, story, nonogram, trans, taboo"></div>
     <div class="example-list">
       <article class="example" data-search="money cash smplayer_money console variable"><h3>Money</h3><div class="code consolecode" data-context="Console window">
-  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>SMPlayer_Money = 999999</code></pre>
 </div></article>
       <article class="example" data-search="trans content smplayer_choices_trans_content console variable"><h3>Trans content flag</h3><div class="code consolecode" data-context="Console window">
-  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>SMPlayer_Choices_trans_content = True</code></pre>
 </div></article>
       <article class="example" data-search="watersports smplayer_choices_watersports console variable"><h3>Watersports flag</h3><div class="code consolecode" data-context="Console window">
-  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>SMPlayer_Choices_watersports = True</code></pre>
 </div></article>
       <article class="example" data-search="nonogram difficulty console variable"><h3>Nonogram difficulty</h3><p class="muted">Use the direct variable if it appears in Variable Viewer:</p><div class="code consolecode" data-context="Console window">
-  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>nonogram_difficulty = 0</code></pre>
 </div><p class="muted">Use the persistent version only if it appears in Persistent Viewer:</p><div class="code consolecode" data-context="Console window">
-  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>persistent.nonogram_difficulty = 0
 renpy.save_persistent()</code></pre>
 </div></article>
       <article class="example" data-search="only story mode only_story_mode console variable"><h3>Only story mode</h3><p class="muted">Use the direct variable if it appears in Variable Viewer:</p><div class="code consolecode" data-context="Console window">
-  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>only_story_mode = True</code></pre>
 </div><p class="muted">Use the persistent version only if it appears in Persistent Viewer:</p><div class="code consolecode" data-context="Console window">
-  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>persistent.only_story_mode = True
 renpy.save_persistent()</code></pre>
 </div></article>
       <article class="example" data-search="taboo mode menu flag file is_taboo_edition"><h3>Expose Taboo Mode menu toggle</h3><p class="muted">This belongs in the auto-loaded helper file, not in the console:</p><div class="code filecode" data-context="Auto-loaded file">
-  <div class="codebar"><span>helper .rpy file · Auto-loaded file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Helper .rpy file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>init 999 python:
     is_taboo_edition = True</code></pre>
 </div></article>
       <article class="example" data-search="taboo persistent is_special console"><h3>Set Taboo preference immediately</h3><p class="muted">This belongs in the console window after the game is running:</p><div class="code consolecode" data-context="Console window">
-  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>persistent.is_special = True
 renpy.save_persistent()</code></pre>
 </div></article>
@@ -313,7 +313,7 @@ renpy.save_persistent()</code></pre>
       <div class="card">
         <h3>Correct</h3>
         <div class="code filecode" data-context="Auto-loaded file">
-  <div class="codebar"><span>folder layout · Auto-loaded file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Folder layout</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>game/
   code.rpa
   images.rpa
@@ -323,7 +323,7 @@ renpy.save_persistent()</code></pre>
       <div class="card">
         <h3>Wrong</h3>
         <div class="code filecode" data-context="Auto-loaded file">
-  <div class="codebar"><span>do not place here · Auto-loaded file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <div class="codebar"><span>Do not place here</span><button type="button" onclick="copyCode(this)">Copy</button></div>
   <pre><code>game/saves/console_taboo_unlock.rpy
 game/cache/console_taboo_unlock.rpy</code></pre>
 </div>
@@ -438,3 +438,4 @@ if (search) {
 </script>
 </body>
 </html>
+
