@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ren'Py Console + Taboo Mode Guide</title>
+<meta name="color-scheme" content="light dark">
+<script>
+(function () {
+  try {
+    var pref = localStorage.getItem('renpy-guide-theme') || 'system';
+    var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.theme = pref === 'system' ? (isDark ? 'dark' : 'light') : pref;
+    document.documentElement.dataset.themePreference = pref;
+  } catch (e) {
+    document.documentElement.dataset.theme = 'light';
+    document.documentElement.dataset.themePreference = 'system';
+  }
+})();
+</script>
+<style>
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg:#f5f7fb; --panel:#ffffff; --panel2:#f0f3fa; --ink:#172033; --muted:#5d6880; --line:#dbe1ec;
+  --accent:#575fd7; --accent2:#884cff; --good:#157347; --warn:#a15c00; --danger:#b42318;
+  --code:#111827; --code2:#1f2937; --codeink:#f9fafb; --codemuted:#cbd5e1;
+  --side:#101827; --sideink:#f8fafc; --sidemuted:#c7d2fe; --hover:rgba(255,255,255,.09);
+  --shadow:0 18px 45px rgba(17,24,39,.10); --focus:0 0 0 3px rgba(87,95,215,.28);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:#070b13; --panel:#111827; --panel2:#162033; --ink:#eef3fb; --muted:#a7b3c7; --line:#2d394d;
+  --accent:#9aa2ff; --accent2:#c084fc; --good:#4ade80; --warn:#fbbf24; --danger:#fb7185;
+  --code:#060914; --code2:#121a29; --codeink:#f8fafc; --codemuted:#a8b3c7;
+  --side:#050812; --sideink:#f8fafc; --sidemuted:#a5b4fc; --hover:rgba(154,162,255,.15);
+  --shadow:0 18px 45px rgba(0,0,0,.42); --focus:0 0 0 3px rgba(154,162,255,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+button,a,input{font:inherit} a:focus-visible,button:focus-visible,input:focus-visible{outline:none;box-shadow:var(--focus)}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh}
+aside{position:sticky;top:0;height:100vh;overflow:auto;background:var(--side);color:var(--sideink);padding:20px 18px;border-right:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;margin:0 0 18px}
+.brand-logo{width:46px;height:50px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 8px 16px rgba(0,0,0,.35))}
+.brand-copy h1{font-size:18px;line-height:1.15;margin:0;color:var(--sideink)}
+.brand-copy p{font-size:12px;color:var(--sidemuted);margin:3px 0 0;line-height:1.35}
+nav a{display:block;color:var(--sideink);padding:9px 10px;border-radius:10px;font-size:14px} nav a:hover{background:var(--hover);text-decoration:none}
+.theme-switch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 18px;padding:10px 10px 10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.045)}
+.theme-switch .label{display:flex;flex-direction:column;gap:1px;color:var(--sideink);font-size:13px;font-weight:700;line-height:1.2}
+.theme-switch .label small{font-size:11px;font-weight:500;color:var(--sidemuted)}
+.theme-toggle{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;align-items:center;width:76px;height:38px;padding:3px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.08);color:var(--sideink);cursor:pointer;isolation:isolate}
+.theme-toggle:hover{background:rgba(255,255,255,.12)}
+.theme-toggle .theme-thumb{position:absolute;z-index:-1;top:3px;left:3px;width:30px;height:30px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 18px rgba(0,0,0,.28);transition:transform .18s ease}
+:root[data-theme="dark"] .theme-toggle .theme-thumb{transform:translateX(38px)}
+.theme-toggle .theme-icon{display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;opacity:.72;transition:opacity .18s ease,transform .18s ease}
+:root[data-theme="light"] .theme-toggle .sun,:root[data-theme="dark"] .theme-toggle .moon{opacity:1;transform:scale(1.04)}
+.theme-system{border:0;background:transparent;color:var(--sidemuted);font-size:11px;padding:0;margin:0 0 14px 2px;cursor:pointer;text-align:left}
+.theme-system:hover{color:var(--sideink);text-decoration:underline}
+main{max-width:1180px;width:100%;padding:28px;margin:0 auto}
+.hero{background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid var(--line);box-shadow:var(--shadow);border-radius:26px;padding:30px;margin-bottom:22px}
+.hero h2{font-size:clamp(30px,4vw,52px);line-height:1.05;margin:0 0 12px} .hero p{font-size:18px;color:var(--muted);max-width:860px;margin:0}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px} .badge{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:13px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;margin:18px 0;box-shadow:0 8px 24px rgba(17,24,39,.04)}
+h2{font-size:26px;margin:0 0 14px} h3{font-size:18px;margin:18px 0 8px} p{margin:10px 0;color:var(--ink)} .muted{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px} .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:16px} .card h3{margin-top:0}
+.callout{border-left:5px solid var(--accent);background:var(--panel2);padding:14px 16px;border-radius:12px;margin:12px 0}
+.callout.warn{border-left-color:var(--warn)} .callout.danger{border-left-color:var(--danger)} .callout.good{border-left-color:var(--good)}
+ul,ol{padding-left:24px} li{margin:6px 0}
+kbd{display:inline-block;border:1px solid var(--line);border-bottom-width:3px;border-radius:8px;background:var(--panel2);padding:2px 7px;font-weight:700;color:var(--ink);white-space:nowrap}
+code.inline{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 5px;color:var(--ink)}
+.code{border-radius:15px;overflow:hidden;border:1px solid var(--line);background:var(--code);margin:12px 0}
+.codebar{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--code2);color:var(--codemuted);padding:9px 12px;font-size:13px}
+.codebar button{border:0;border-radius:999px;background:var(--accent);color:#fff;padding:5px 11px;cursor:pointer}
+pre{margin:0;padding:16px;overflow:auto} pre code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--codeink);font-size:14px;line-height:1.55}
+.filecode{border-left:5px solid var(--accent)} .consolecode{border-left:5px solid var(--good)}
+.screenshot{background:#090a10;border-radius:18px;padding:10px;border:1px solid var(--line);margin-top:12px} .screenshot img{display:block;width:100%;border-radius:12px;height:auto}
+.caption{font-size:13px;color:var(--muted);margin-top:8px}
+table{border-collapse:collapse;width:100%;margin:12px 0;overflow:hidden;border-radius:14px} th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top} th{background:var(--panel2)}
+.search{display:flex;gap:10px;align-items:center;margin:12px 0} .search input{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--ink);padding:11px 12px}
+footer{color:var(--muted);font-size:13px;padding:20px 0 40px}
+@media (max-width:920px){.layout{display:block} aside{position:relative;height:auto} main{padding:16px} .grid,.grid3{grid-template-columns:1fr}}
+@media print{aside,.theme-switch,.codebar button{display:none!important} .layout{display:block} main{max-width:none} section,.hero{box-shadow:none;break-inside:avoid} body{background:#fff;color:#111}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand" aria-label="Guide title">
+    <img class="brand-logo" src="./guide-logo.png" alt="Ren'Py guide logo" width="46" height="50">
+    <div class="brand-copy">
+      <h1>Ren'Py Guide</h1>
+      <p>Console, Taboo Mode, and safe variable edits.</p>
+    </div>
+  </div>
+  <div class="theme-switch" aria-label="Theme selector">
+    <span class="label">Theme <small id="themeState">System</small></span>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light or dark theme" aria-pressed="false">
+      <span class="theme-icon sun" aria-hidden="true">☀</span>
+      <span class="theme-thumb" aria-hidden="true"></span>
+      <span class="theme-icon moon" aria-hidden="true">☾</span>
+    </button>
+  </div>
+  <button type="button" class="theme-system" id="themeSystem">Use system theme</button>
+  <nav>
+    <a href="#quick">Quick start</a>
+    <a href="#menu">Taboo Mode menu</a>
+    <a href="#difference">File vs console</a>
+    <a href="#file">Helper file</a>
+    <a href="#console">Console commands</a>
+    <a href="#variables">Finding variables</a>
+    <a href="#examples">Examples</a>
+    <a href="#folders">Correct folder</a>
+    <a href="#hotkeys">Console hotkeys</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+    <a href="#refs">Official docs</a>
+  </nav>
+</aside>
+<main>
+  <section class="hero">
+    <h2>Ren'Py Console + Taboo Mode Guide</h2>
+    <p>A player-friendly guide for adding one helper file, enabling the console, exposing the Settings &gt; Gameplay &gt; Taboo Mode menu toggle, and changing visible variables safely.</p>
+    <div class="badges">
+      <span class="badge">Single public HTML page</span>
+      <span class="badge">Dark / light / system theme</span>
+      <span class="badge">Clear file-vs-console examples</span>
+      <span class="badge">Official Ren'Py references</span>
+    </div>
+  </section>
+
+  <section id="quick">
+    <h2>1. Quick start</h2>
+    <p><strong>Goal:</strong> add one helper file, restart, use <kbd>Shift</kbd> + <kbd>O</kbd> only when console access is needed, then use the new <strong>Settings</strong> &gt; <strong>Gameplay</strong> &gt; <strong>Taboo Mode</strong> toggle.</p>
+    <div class="callout good"><strong>Fastest option:</strong> you do not need to manually write the helper code. Download the already prepared <a href="./console_taboo_unlock.rpy" download><strong>console_taboo_unlock.rpy</strong></a>, save it directly into the game's <strong>game</strong> directory, and restart the game.</div>
+    <ol>
+      <li>Download <a href="./console_taboo_unlock.rpy" download><strong>console_taboo_unlock.rpy</strong></a>.</li>
+      <li>Save it in the game's <strong>game</strong> folder, next to files like <code class="inline">code.rpa</code> and <code class="inline">images.rpa</code>. This is the same folder Ren'Py scans for auto-loaded <code class="inline">.rpy</code> files.</li>
+      <li>Restart the game completely.</li>
+      <li>Open <strong>Settings</strong> &gt; <strong>Gameplay</strong> and check for <strong>Taboo Mode</strong>.</li>
+      <li>Open the console with <kbd>Shift</kbd> + <kbd>O</kbd> only when you need to change variables manually.</li>
+    </ol>
+    <div class="callout"><strong>Manual option:</strong> if you prefer creating the file yourself, use the copyable <strong>Auto-loaded file</strong> example in section 4. Do not paste that full helper-file block into the console window.</div>
+  </section>
+
+  <section id="menu">
+    <h2>2. New menu function: Taboo Mode toggle</h2>
+    <p>The helper file enables the game/patch flag that makes the <strong>Taboo Mode</strong> option visible under <strong>Settings &gt; Gameplay</strong>.</p>
+    <div class="screenshot">
+      <img src="./taboo_mode_settings_screenshot_correct.png" alt="Settings menu with arrow pointing to Taboo Mode toggle under Gameplay">
+    </div>
+    <p class="caption">Use the Settings menu item on the left, then the Taboo Mode radio buttons in the Gameplay tab.</p>
+  </section>
+
+  <section id="difference">
+    <h2>3. File code vs console commands</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Auto-loaded helper file</h3>
+        <p>Put this type of code inside <code class="inline">console_taboo_unlock.rpy</code>. Ren'Py reads it during startup.</p>
+        <ul>
+          <li>Good for enabling the console.</li>
+          <li>Good for exposing the Taboo Mode menu toggle.</li>
+          <li>Requires a full game restart after changes.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Console window</h3>
+        <p>Type this type of code after opening the in-game console with <kbd>Shift</kbd> + <kbd>O</kbd>.</p>
+        <ul>
+          <li>Good for money, choices, flags, and testing values.</li>
+          <li>Works while the game is running.</li>
+          <li>Some changes may need a save/reload or scene change.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout warn"><strong>Do not mix them:</strong> <code class="inline">init python:</code> and <code class="inline">default</code> lines belong in a <code class="inline">.rpy</code> file. Simple assignments like <code class="inline">SMPlayer_Money = 999999</code> belong in the console window.</div>
+  </section>
+
+  <section id="file">
+    <h2>4. Helper file that gets auto-loaded</h2>
+    <p>Create this file in the game folder:</p>
+    <div class="code filecode" data-context="Auto-loaded file">
+  <div class="codebar"><span>file path · Auto-loaded file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>game/console_taboo_unlock.rpy</code></pre>
+</div>
+    <p>Paste this into that file:</p>
+    <div class="code filecode" data-context="Auto-loaded file">
+  <div class="codebar"><span>console_taboo_unlock.rpy · Auto-loaded file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code># Ren&#x27;Py console + Taboo Mode helper
+# Place this file in the game/ folder, next to the game&#x27;s .rpa files.
+# Restart the game fully after adding or changing this file.
+
+# Auto-loaded at startup:
+# Creates/enables the persistent special-content flag if it does not already exist.
+default persistent.is_special = True
+
+# Auto-loaded at startup:
+# Enables the developer console.
+init -999 python:
+    config.developer = True
+    config.console = True
+
+# Auto-loaded at startup:
+# Enables the game/patch flag that exposes Settings &gt; Gameplay &gt; Taboo Mode.
+# The late init priority helps if the base game defines the flag earlier.
+init 999 python:
+    is_taboo_edition = True
+
+# Optional safety placeholder.
+# Keep this only if the game expects a dev_controls screen.
+screen dev_controls():
+    null</code></pre>
+</div>
+    <h3>What the important file lines do</h3>
+    <table>
+      <thead><tr><th>Line</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code class="inline">default persistent.is_special = True</code></td><td>Creates the persistent special-content preference if it does not already exist.</td></tr>
+        <tr><td><code class="inline">config.developer = True</code></td><td>Enables Ren'Py developer features.</td></tr>
+        <tr><td><code class="inline">config.console = True</code></td><td>Allows the console to open in-game.</td></tr>
+        <tr><td><code class="inline">is_taboo_edition = True</code></td><td>Exposes the Settings &gt; Gameplay &gt; Taboo Mode switch in this patch/game setup.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="console">
+    <h2>5. Console window commands</h2>
+    <p>Open the console with <kbd>Shift</kbd> + <kbd>O</kbd>. Paste or type console examples there.</p>
+    <div class="callout"><strong>Console examples are marked green.</strong> They are not meant to be placed in the helper file.</div>
+    <div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>enable persistent Taboo preference now · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>persistent.is_special = True
+renpy.save_persistent()</code></pre>
+</div>
+    <div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>set money · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>SMPlayer_Money = 999999</code></pre>
+</div>
+    <div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>set energy to max · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>SMPlayer_Energy = SMPlayer_Max_Energy</code></pre>
+</div>
+  </section>
+
+  <section id="variables">
+    <h2>6. How to find variables</h2>
+    <ol>
+      <li>Open the game's developer tools or variable viewer, if available.</li>
+      <li>Find the exact variable name shown on the left side of the equals sign.</li>
+      <li>Check which viewer it appears in.</li>
+    </ol>
+    <table>
+      <thead><tr><th>Where you saw it</th><th>How to edit it</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Persistent Viewer</strong></td><td>Prefix the name with <code class="inline">persistent.</code> and save persistent data.</td><td><code class="inline">is_special</code> becomes <code class="inline">persistent.is_special</code>.</td></tr>
+        <tr><td><strong>Variable Viewer</strong></td><td>Use the variable name directly.</td><td><code class="inline">SMPlayer_Money</code> stays <code class="inline">SMPlayer_Money</code>.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn"><strong>Use exact capitalization.</strong> <code class="inline">True</code> and <code class="inline">False</code> must start with capital letters.</div>
+  </section>
+
+  <section id="examples">
+    <h2>7. Copy-paste examples</h2>
+    <div class="search"><input id="exampleSearch" type="search" placeholder="Search examples: money, watersports, story, nonogram, trans, taboo"></div>
+    <div class="example-list">
+      <article class="example" data-search="money cash smplayer_money console variable"><h3>Money</h3><div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>SMPlayer_Money = 999999</code></pre>
+</div></article>
+      <article class="example" data-search="trans content smplayer_choices_trans_content console variable"><h3>Trans content flag</h3><div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>SMPlayer_Choices_trans_content = True</code></pre>
+</div></article>
+      <article class="example" data-search="watersports smplayer_choices_watersports console variable"><h3>Watersports flag</h3><div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>SMPlayer_Choices_watersports = True</code></pre>
+</div></article>
+      <article class="example" data-search="nonogram difficulty console variable"><h3>Nonogram difficulty</h3><p class="muted">Use the direct variable if it appears in Variable Viewer:</p><div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>nonogram_difficulty = 0</code></pre>
+</div><p class="muted">Use the persistent version only if it appears in Persistent Viewer:</p><div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>persistent.nonogram_difficulty = 0
+renpy.save_persistent()</code></pre>
+</div></article>
+      <article class="example" data-search="only story mode only_story_mode console variable"><h3>Only story mode</h3><p class="muted">Use the direct variable if it appears in Variable Viewer:</p><div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>only_story_mode = True</code></pre>
+</div><p class="muted">Use the persistent version only if it appears in Persistent Viewer:</p><div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>persistent.only_story_mode = True
+renpy.save_persistent()</code></pre>
+</div></article>
+      <article class="example" data-search="taboo mode menu flag file is_taboo_edition"><h3>Expose Taboo Mode menu toggle</h3><p class="muted">This belongs in the auto-loaded helper file, not in the console:</p><div class="code filecode" data-context="Auto-loaded file">
+  <div class="codebar"><span>helper .rpy file · Auto-loaded file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>init 999 python:
+    is_taboo_edition = True</code></pre>
+</div></article>
+      <article class="example" data-search="taboo persistent is_special console"><h3>Set Taboo preference immediately</h3><p class="muted">This belongs in the console window after the game is running:</p><div class="code consolecode" data-context="Console window">
+  <div class="codebar"><span>console window · Console window</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>persistent.is_special = True
+renpy.save_persistent()</code></pre>
+</div></article>
+    </div>
+  </section>
+
+  <section id="folders">
+    <h2>8. Correct folder and file strategy</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Correct</h3>
+        <div class="code filecode" data-context="Auto-loaded file">
+  <div class="codebar"><span>folder layout · Auto-loaded file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>game/
+  code.rpa
+  images.rpa
+  console_taboo_unlock.rpy</code></pre>
+</div>
+      </div>
+      <div class="card">
+        <h3>Wrong</h3>
+        <div class="code filecode" data-context="Auto-loaded file">
+  <div class="codebar"><span>do not place here · Auto-loaded file</span><button type="button" onclick="copyCode(this)">Copy</button></div>
+  <pre><code>game/saves/console_taboo_unlock.rpy
+game/cache/console_taboo_unlock.rpy</code></pre>
+</div>
+      </div>
+    </div>
+    <p>The filename can be different, but it must end with <code class="inline">.rpy</code> and be in the game script folder.</p>
+    <p><code class="inline">.rpyc</code> files are compiled/generated files. You normally edit the <code class="inline">.rpy</code> source file, not the <code class="inline">.rpyc</code> file.</p>
+  </section>
+
+  <section id="hotkeys">
+    <h2>9. Useful hotkeys</h2>
+    <table>
+      <thead><tr><th>Action</th><th>Keys</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>Open console</td><td><kbd>Shift</kbd> + <kbd>O</kbd></td><td>Run console commands while the game is open.</td></tr>
+        <tr><td>Open developer menu</td><td><kbd>Shift</kbd> + <kbd>D</kbd></td><td>Access Ren'Py developer tools when enabled.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="troubleshooting">
+    <h2>10. Troubleshooting</h2>
+    <table>
+      <thead><tr><th>Problem</th><th>Likely cause</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td>Console does not open</td><td>Helper file is missing, in the wrong folder, or the game was not restarted.</td><td>Place the file in the game folder and restart fully.</td></tr>
+        <tr><td>Taboo Mode does not appear</td><td><code class="inline">is_taboo_edition</code> was not loaded or was overwritten.</td><td>Use the provided helper file with <code class="inline">init 999 python</code>.</td></tr>
+        <tr><td>Variable change does not stick</td><td>Persistent values were not saved, or the game overwrote the value later.</td><td>For persistent values, run <code class="inline">renpy.save_persistent()</code>; then save/reload or restart.</td></tr>
+        <tr><td>Syntax error on startup</td><td>Indentation or quote mismatch in the helper file.</td><td>Re-copy the helper file content exactly.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout danger"><strong>Privacy:</strong> do not share screenshots that expose session tokens, account IDs, email addresses, or secret keys.</div>
+  </section>
+
+  <section id="refs">
+    <h2>11. Official Ren'Py reference links</h2>
+    <table>
+      <thead><tr><th>Topic</th><th>Official docs</th><th>Why it matters here</th></tr></thead>
+      <tbody>
+        <tr><td>Script files and <code class="inline">.rpy</code></td><td><a href="https://www.renpy.org/doc/html/language_basics.html">Language Basics</a></td><td>Explains Ren'Py script files and script loading concepts.</td></tr>
+        <tr><td>Python and init blocks</td><td><a href="https://www.renpy.org/doc/html/python.html">Python Statements</a></td><td>Explains <code class="inline">init python</code> and init priority.</td></tr>
+        <tr><td>Console and developer tools</td><td><a href="https://www.renpy.org/doc/html/developer_tools.html">Developer Tools</a></td><td>Explains console/developer features and hotkeys.</td></tr>
+        <tr><td>Configuration variables</td><td><a href="https://www.renpy.org/doc/html/config.html">Configuration Variables</a></td><td>Relevant for <code class="inline">config.console</code> and <code class="inline">config.developer</code>.</td></tr>
+        <tr><td>Persistent data</td><td><a href="https://www.renpy.org/doc/html/persistent.html">Persistent Data</a></td><td>Relevant for <code class="inline">persistent.is_special</code> and <code class="inline">renpy.save_persistent()</code>.</td></tr>
+        <tr><td>Screens</td><td><a href="https://www.renpy.org/doc/html/screens.html">Screens and Screen Language</a></td><td>Relevant for the optional empty <code class="inline">dev_controls</code> screen.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <p>This public guide intentionally includes only distributable guide assets and the helper file. Keep private saves, tokens, screenshots, and source repos separate.</p>
+  </footer>
+</main>
+</div>
+<script>
+function activeSystemTheme() {
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+function setThemePreference(pref) {
+  var theme = pref === 'system' ? activeSystemTheme() : pref;
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.dataset.themePreference = pref;
+  try { localStorage.setItem('renpy-guide-theme', pref); } catch (e) {}
+  var toggle = document.getElementById('themeToggle');
+  var state = document.getElementById('themeState');
+  if (toggle) {
+    toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    toggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+  }
+  if (state) {
+    state.textContent = pref === 'system' ? 'System · ' + (theme === 'dark' ? 'dark' : 'light') : (theme === 'dark' ? 'Dark' : 'Light');
+  }
+}
+var themeToggle = document.getElementById('themeToggle');
+if (themeToggle) {
+  themeToggle.addEventListener('click', function() {
+    var current = document.documentElement.dataset.theme || activeSystemTheme();
+    setThemePreference(current === 'dark' ? 'light' : 'dark');
+  });
+}
+var themeSystem = document.getElementById('themeSystem');
+if (themeSystem) {
+  themeSystem.addEventListener('click', function() { setThemePreference('system'); });
+}
+setThemePreference(document.documentElement.dataset.themePreference || 'system');
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+    if ((localStorage.getItem('renpy-guide-theme') || 'system') === 'system') setThemePreference('system');
+  });
+}
+async function copyCode(button) {
+  var code = button.closest('.code').querySelector('code').innerText;
+  try {
+    await navigator.clipboard.writeText(code);
+    var old = button.textContent;
+    button.textContent = 'Copied';
+    setTimeout(function() { button.textContent = old; }, 1200);
+  } catch (e) {
+    button.textContent = 'Select text';
+  }
+}
+var search = document.getElementById('exampleSearch');
+if (search) {
+  search.addEventListener('input', function() {
+    var q = search.value.trim().toLowerCase();
+    document.querySelectorAll('.example').forEach(function(item) {
+      var hay = (item.dataset.search + ' ' + item.innerText).toLowerCase();
+      item.style.display = hay.indexOf(q) >= 0 ? '' : 'none';
+    });
+  });
+}
+</script>
+</body>
+</html>
