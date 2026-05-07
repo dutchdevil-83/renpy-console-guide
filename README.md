@@ -12,8 +12,6 @@ Public GitHub Pages site for the Ren'Py console and Taboo Mode guide.
 
 - index.html
 - console_taboo_unlock.rpy
-- 	aboo_mode_settings_screenshot_correct.png
+- taboo_mode_settings_screenshot_correct.png
 - guide-logo.png
 - .nojekyll
-
-This repository is intentionally separate from any private/source repository.
